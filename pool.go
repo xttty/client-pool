@@ -124,7 +124,6 @@ func (pool *Pool) Get(ctx context.Context) (*Client, error) {
 			pool.lock.Lock()
 			defer pool.lock.Unlock()
 
-			var client *Client
 			var err error
 			if pool.connCnt >= int32(pool.cap) {
 				err = ErrGetTimeout
@@ -229,6 +228,7 @@ func (client *Client) Destory() {
 		atomic.AddInt32(&client.pool.connCnt, -1)
 	}
 	client.ClientConn = nil
+	client.pool = nil
 }
 
 // TimeInit 获取连接创建时间
